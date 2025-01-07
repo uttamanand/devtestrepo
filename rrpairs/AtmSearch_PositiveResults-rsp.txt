@@ -1,0 +1,68 @@
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=utf-8
+Status: 200 OK
+Connection: keep-alive
+
+{
+    "atms": [
+        {
+            "atmLocation": {
+                "address": {
+                    "city": "ISLANDIA",
+                    "country": "USA",
+                    "postalCode": "11749",
+                    "state": "NY",
+                    "street": "1700 VETERANS HIGHWAY"
+                },
+                "coordinates": {
+                    "latitude": 40.805604,
+                    "longitude": -73.181343
+                },
+                "id": "848936",
+                "isAvailable24Hours": true,
+                "isDepositAvailable": false,
+                "isHandicappedAccessible": false,
+                "isOffPremise": true,
+                "isSeasonal": false,
+                "languageType": null,
+                "locationDescription": "1700 VETERANS HIGHWAY,ISLANDIA,NY,11749,USA",
+                "logoName": "711",
+                "name": "7ELEVEN-FCTI"
+            },
+            "distance": 0.584363486745727
+        },
+        {
+            "atmLocation": {
+                "address": {
+                    "city": "HAUPPAUGE",
+                    "country": "USA",
+                    "postalCode": "11788",
+                    "state": "NY",
+                    "street": "2140 MOTOR PKWY"
+                },
+                "coordinates": {
+                    "latitude": 40.817,
+                    "longitude": -73.155
+                },
+                "id": "848959",
+                "isAvailable24Hours": true,
+                "isDepositAvailable": false,
+                "isHandicappedAccessible": false,
+                "isOffPremise": true,
+                "isSeasonal": false,
+                "languageType": null,
+                "locationDescription": "2140 MOTOR PKWY,HAUPPAUGE,NY,11788,USA",
+                "logoName": "711",
+                "name": "7ELEVEN-FCTI"
+            },
+            "distance": 1.11835354222097
+        }
+    ],
+    "atms_count": 50,
+    "error_code": "0",
+    "http_code": "200",
+    "limit": 20,
+    "page": 1,
+    "page_count": 3,
+    "success": true
+}

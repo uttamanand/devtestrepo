@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+
+<Run name="Performance_Run100Users1Cycle" think="100" pathfinder="false" >
+
+<meta>
+   <create version="10.7.2" buildNumber="10.7.2.sp3" author="admin" date="10/04/2023" host="5TVRDY3" />
+   <lastEdited version="10.7.2" buildNumber="10.7.2.sp3" author="admin" date="10/04/2023" host="5TVRDY3" />
+</meta>
+
+<id>6F543819627511EE8AECB0DCEF83C615</id>
+<Documentation></Documentation>
+<IsInProject>true</IsInProject>
+<paceTime>0</paceTime>
+<paceTrans>0</paceTrans>
+<EventConsumer type="com.itko.lisa.report.DefaultReportToDataModel" filter="0,1,2,3,6,7,8,9,10,14,15,17,18,19,21,22,23,24,25,26,27,28,30,31,32,37,38,39,40,42,43,44,45,46,47,48,49,51,61,62,63,64,65,66,67,76,79,80,81,82,83,84,85,86,0" >
+<params>
+    <watchAllEvents>false</watchAllEvents>
+    <watchProps>false</watchProps>
+    <watchMetrics>true</watchMetrics>
+    <watchReqResp>true</watchReqResp>
+    <maxErrors>100</maxErrors>
+    <includeWarnings>true</includeWarnings>
+</params>
+</EventConsumer>
+<LoadPattern>
+<type>com.itko.lisa.coordinator.runpatterns.WeightedAveragePattern</type>
+<ssInstances>100</ssInstances>
+<upSeconds>60</upSeconds>
+<ssSeconds>60</ssSeconds>
+<downSeconds>60</downSeconds>
+</LoadPattern>
+<Distribution>
+<type>com.itko.lisa.coordinator.runpatterns.PercentDistribution</type>
+<Simulator>
+<name>auto</name>
+<percent>100</percent>
+<shortname>auto</shortname>
+</Simulator>
+</Distribution>
+<Metrics >
+<SampleRate>1</SampleRate>
+<IntervalRate>10</IntervalRate>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#c00000</color>
+<eventid>13</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#ff0000</color>
+<eventid>20</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#0000ff</color>
+<eventid>15</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TestEventCollector">
+<scale>0.0</scale>
+<valueType>1</valueType>
+<color>#c00000</color>
+<eventid>50</eventid>
+<keyexpr>*</keyexpr>
+<counter>true</counter>
+</Metric>
+<Metric type="com.itko.lisa.stats.TRIMetricCollector">
+<scale>0.0</scale>
+<valueType>2</valueType>
+<color>#ff00ff</color>
+<metric>0</metric>
+</Metric>
+<Metric type="com.itko.lisa.stats.TRIMetricCollector">
+<scale>0.0</scale>
+<valueType>2</valueType>
+<color>#af00a6</color>
+<metric>1</metric>
+</Metric>
+<Metric type="com.itko.lisa.stats.TRIMetricCollector">
+<scale>0.0</scale>
+<valueType>2</valueType>
+<color>#00a6af</color>
+<metric>5</metric>
+</Metric>
+</Metrics>
+<ipspoofing>
+<ipSpoofingEnabled>false</ipSpoofingEnabled>
+<useIPv4>true</useIPv4>
+<useIPv6>false</useIPv6>
+<selectionAlgorithm>ROUND_ROBIN</selectionAlgorithm>
+</ipspoofing>
+</Run>
