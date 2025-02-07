@@ -1,0 +1,131 @@
+
+node {
+    
+	// Variables change per environment- These could become parameters
+	def devTestServer = 'localhost'
+	def vseServer = 'VSE'	
+	def svPluginPort = '1505'
+	def testConfig = "Configs\\project.config"
+	//def atm_rr_file = "rrpairs\\AtmSearch.zip"
+	def rr_req_file = "rrpairs\\AtmSearch_PositiveResults-req.txt"
+	def rr_rsp_file = "rrpairs\\AtmSearch_PositiveResults-rsp.txt"
+	
+	//basic Auth for default DevTest admin user
+	def basicAdmin = 'Basic ='
+
+	stage('Get Assets from Github') {
+		git credentialsId: '4bd2f053-2ee0-4eed-8c42-e77b4f523f39', branch: 'main', url: 'https://github.com/uttamanand/devtestrepo.git'
+	}
+//End Stage
+
+	stage('Get VSEs') {
+ 
+	// Use REST API
+		script { 
+			String jsonRsp = ""
+			String rspCode = ""
+			def iFound = 0
+			String url = """ -k -X GET "http://${devTestServer}:${svPluginPort}/lisa-virtualize-invoke/api/v3/vses?status=Active&sortBy=VseName&sortOrder=ASC" -H \"accept: application/json\" -H \"authorization: ${basicAdmin}\" """
+			if (isUnix()){
+				// Linux / Mac
+				echo "Linux String url:  $url"
+				def (String response, String code) = sh(script: """curl --silent --write-out \"\n%{http_code}\" $url""", returnStdout: true).trim().tokenize("\n")
+				///echo response
+				jsonRsp = response;
+				//echo "jsonRsp = " + jsonRsp
+				rspCode = code.toString();
+				//echo "HTTP response status code: $rspCode"
+			}
+			else {
+				
+				echo "Windows String url:  $url"
+				// Window curl breaks down the return into 3 parts vs Linux 2 parts
+				def (String command, String response, String code) = bat(script: """curl --silent --write-out \"\\n%%{http_code}\" $url""", returnStdout: true).trim().tokenize("""\n""")
+				//echo response
+				jsonRsp = response;
+				//echo "jsonRsp = " + jsonRsp
+				rspCode = code.toString();
+			//	echo "HTTP response status code: $rspCode"
+			}
+			
+			if (rspCode.toInteger() >= 200 && rspCode.toInteger() < 300) {
+				echo "HTTP response status code: $rspCode"
+				def jsonBuilder = readJSON text: jsonRsp
+				vseCount = jsonBuilder.totalVSEsCount
+				echo "Total Number of VSEs: $vseCount"
+				for (i=0;i<vseCount;i++) {
+					if (jsonBuilder.vseList[i].name == vseServer) {
+						echo "VSE name: " + jsonBuilder.vseList[i].name
+						iFound = 1
+					}
+				}				
+			}
+			else {
+			//Fail Here
+				echo "ERROR - HTTP response status code: $rspCode"
+				currentBuild.result = 'FAILURE'
+				return
+			}
+			
+			if (!iFound) {
+				echo "ERROR - Virtual Service Environment $vseServer not found"
+				currentBuild.result = 'FAILURE'
+				return
+			}
+		}
+		//End Script
+	}
+//End Stage
+
+	stage('Create Virtual Service(s)') {
+	
+		// Deploy using REST API
+		script {
+		
+			String jsonRsp = ""
+			String rspCode = ""
+			String url = """ -k -X POST "http://${devTestServer}:${svPluginPort}/lisa-virtualize-invoke/api/v3/vses/${vseServer}/services" -H "accept: application/json" -H "Content-Type: multipart/form-data" -H \"Authorization: ${basicAdmin}\" -F "deploy=true" -F "inputFile1=@${rr_req_file};type=text/plain" -F "inputFile2=@${rr_rsp_file};type=text/plain" -F "config="{\\"dataProtocol\\":{\\"forRequest\\":true,\\"typeId\\":\\"RESTDPH\\"},\\"transportProtocol\\":{\\"basePath\\":\\"/v3.1/nodes/atms\\",\\"hostHeaderPassThrough\\":false,\\"typeId\\":\\"HTTP\\",\\"useGateway\\":true},\\"virtualService\\":{\\"description\\":\\"ATM_Search_RR\\",\\"name\\":\\"ATM_Search_RR\\",\\"status\\":\\"\\",\\"version\\":\\"2.0\\"}}"" """
+			
+			if (isUnix()){
+			// Linux / Mac
+				//echo "Linux String url:  $url"
+				def (String response, String code) = sh(script: """curl --silent --write-out \"\n%{http_code}\"  $url """, returnStdout: true).trim().tokenize("\n") 
+				jsonRsp = response;
+				//echo "jsonRsp = " + jsonRsp
+				rspCode = code.toString();
+				//echo "HTTP response status code: $code"
+			}
+			else {
+			// Windows
+				echo "Windows String url:  $url"
+				// Window curl breaks down the return into 3 parts vs Linux 2 parts
+				def (String command, String response, String code) = bat(script: """curl --silent --write-out \"\\n%%{http_code}\" $url""", returnStdout: true).trim().tokenize("""\n""") 
+				//echo "command = " + command
+				echo "response = " + response
+				jsonRsp = response;
+				//echo "jsonRsp = " + jsonRsp
+				rspCode = code.toString();
+				//echo "HTTP response status code: $rspCode"
+			}
+			
+			//Evaluate Response here
+			//echo "rspCode = " + rspCode
+			//echo "jsonRsp = " + jsonRsp
+			if (rspCode.toInteger() >= 200 && rspCode.toInteger() < 300) {
+				echo "HTTP response status code: $rspCode"
+			}
+			else {
+			//Fail Here
+				echo "ERROR - HTTP response status code: $rspCode"
+				currentBuild.result = 'FAILURE'
+				return
+			}			
+	
+		}
+		//End Script
+	
+	}
+//End Stage
+
+
+}
